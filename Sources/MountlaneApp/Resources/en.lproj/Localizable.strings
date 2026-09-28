@@ -55,6 +55,13 @@
 "transfer.copying" = "Copying";
 "transfer.completed" = "Completed";
 "transfer.failed" = "Failed";
+"transfer.conflict" = "Name conflicts";
+"transfer.conflictKeepBoth" = "Keep both";
+"transfer.conflictSkip" = "Skip existing";
+"transfer.conflictReplace" = "Replace existing";
+"transfer.replaceTitle" = "Replace existing items?";
+"transfer.replaceConfirm" = "Replace";
+"transfer.replaceWarning" = "Items with the same name in the destination folder will be permanently replaced. This cannot be undone.";
 "action.eject" = "Eject";
 "action.ok" = "OK";
 "action.done" = "Done";

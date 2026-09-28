@@ -50,6 +50,23 @@ final class VolumeInfoTests: XCTestCase {
         XCTAssertEqual(CopyEngine.availableDestination(for: source, in: temporary).lastPathComponent, "report 2.pdf")
     }
 
+    func testSkipPolicyDoesNotOverwriteExistingFile() throws {
+        let manager = FileManager.default
+        let temporary = manager.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+        let sourceDirectory = temporary.appendingPathComponent("source", isDirectory: true)
+        let destinationDirectory = temporary.appendingPathComponent("destination", isDirectory: true)
+        defer { try? manager.removeItem(at: temporary) }
+        try manager.createDirectory(at: sourceDirectory, withIntermediateDirectories: true)
+        try manager.createDirectory(at: destinationDirectory, withIntermediateDirectories: true)
+        let source = sourceDirectory.appendingPathComponent("report.txt")
+        try Data("new".utf8).write(to: source)
+        try Data("existing".utf8).write(to: destinationDirectory.appendingPathComponent("report.txt"))
+
+        try CopyEngine.copy([source], to: destinationDirectory, collisionPolicy: .skip)
+
+        XCTAssertEqual(String(data: try Data(contentsOf: destinationDirectory.appendingPathComponent("report.txt")), encoding: .utf8), "existing")
+    }
+
     private func makeVolume(isReadOnly: Bool, total: Int64?, available: Int64?, fileSystem: String = "exFAT") -> VolumeInfo {
         VolumeInfo(
             id: "test-volume",

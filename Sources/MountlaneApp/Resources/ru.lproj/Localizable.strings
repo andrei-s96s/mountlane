@@ -55,6 +55,13 @@
 "transfer.copying" = "Копирование";
 "transfer.completed" = "Готово";
 "transfer.failed" = "Ошибка";
+"transfer.conflict" = "Конфликты имён";
+"transfer.conflictKeepBoth" = "Сохранить оба";
+"transfer.conflictSkip" = "Пропускать существующие";
+"transfer.conflictReplace" = "Заменять существующие";
+"transfer.replaceTitle" = "Заменить существующие объекты?";
+"transfer.replaceConfirm" = "Заменить";
+"transfer.replaceWarning" = "Объекты с таким же именем в папке назначения будут безвозвратно заменены. Отменить это действие нельзя.";
 "action.eject" = "Извлечь";
 "action.ok" = "ОК";
 "action.done" = "Готово";

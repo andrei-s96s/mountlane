@@ -20,6 +20,9 @@ struct VolumeBrowser: View {
     @State private var showingRemountConfirmation = false
     @State private var showingNTFSSetup = false
     @State private var selection = Set<FileItem.ID>()
+    @State private var collisionPolicy: CollisionPolicy = .keepBoth
+    @State private var pendingDestination: URL?
+    @State private var showingReplaceConfirmation = false
 
     init(volume: VolumeInfo) {
         self.volume = volume
@@ -77,6 +80,13 @@ struct VolumeBrowser: View {
                     }
                 }
                 Toggle(L10n.text("files.showHidden"), isOn: $showHiddenFiles)
+                Menu(L10n.text("transfer.conflict"), systemImage: "exclamationmark.arrow.trianglehead.2.clockwise.rotate.90") {
+                    Picker(L10n.text("transfer.conflict"), selection: $collisionPolicy) {
+                        ForEach(CollisionPolicy.allCases) { policy in
+                            Text(L10n.text(policy.localizationKey)).tag(policy)
+                        }
+                    }
+                }
                 Button(L10n.text("transfer.copy"), systemImage: "doc.on.doc") { chooseCopyDestination() }
                     .disabled(selection.isEmpty)
             }
@@ -93,6 +103,12 @@ struct VolumeBrowser: View {
             Text(L10n.text("ntfs.remountWarning"))
         }
         .sheet(isPresented: $showingNTFSSetup) { NTFSSetupView() }
+        .confirmationDialog(L10n.text("transfer.replaceTitle"), isPresented: $showingReplaceConfirmation, titleVisibility: .visible) {
+            Button(L10n.text("transfer.replaceConfirm"), role: .destructive) { beginCopy() }
+            Button(L10n.text("action.cancel"), role: .cancel) { pendingDestination = nil }
+        } message: {
+            Text(L10n.text("transfer.replaceWarning"))
+        }
     }
 
     private func loadItems() {
@@ -118,7 +134,19 @@ struct VolumeBrowser: View {
         panel.prompt = L10n.text("transfer.copyHere")
         guard panel.runModal() == .OK, let destination = panel.url else { return }
         let sources = items.filter { selection.contains($0.id) }.map(\.url)
-        transferStore.copy(sources, to: destination)
+        pendingDestination = destination
+        if collisionPolicy == .replace && CopyEngine.hasCollisions(sources, in: destination) {
+            showingReplaceConfirmation = true
+        } else {
+            beginCopy()
+        }
+    }
+
+    private func beginCopy() {
+        guard let destination = pendingDestination else { return }
+        let sources = items.filter { selection.contains($0.id) }.map(\.url)
+        transferStore.copy(sources, to: destination, collisionPolicy: collisionPolicy)
+        pendingDestination = nil
     }
 
     private var visibleItems: [FileItem] {

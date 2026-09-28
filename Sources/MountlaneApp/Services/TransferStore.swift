@@ -9,9 +9,9 @@ private enum CopyResult: Sendable {
 final class TransferStore: ObservableObject {
     @Published private(set) var operations: [TransferOperation] = []
 
-    func copy(_ sourceURLs: [URL], to destinationURL: URL) {
+    func copy(_ sourceURLs: [URL], to destinationURL: URL, collisionPolicy: CollisionPolicy) {
         guard !sourceURLs.isEmpty else { return }
-        var operation = TransferOperation(sourceURLs: sourceURLs, destinationURL: destinationURL)
+        let operation = TransferOperation(sourceURLs: sourceURLs, destinationURL: destinationURL, collisionPolicy: collisionPolicy)
         operations.insert(operation, at: 0)
         let operationID = operation.id
 
@@ -19,7 +19,7 @@ final class TransferStore: ObservableObject {
             update(operationID, state: .copying)
             let result: CopyResult = await Task.detached(priority: .userInitiated) {
                 do {
-                    try CopyEngine.copy(sourceURLs, to: destinationURL)
+                    try CopyEngine.copy(sourceURLs, to: destinationURL, collisionPolicy: collisionPolicy)
                     return .completed
                 } catch {
                     return .failed(error.localizedDescription)
@@ -47,11 +47,27 @@ final class TransferStore: ObservableObject {
 }
 
 enum CopyEngine {
-    static func copy(_ sources: [URL], to destination: URL, fileManager: FileManager = .default) throws {
+    static func copy(_ sources: [URL], to destination: URL, collisionPolicy: CollisionPolicy, fileManager: FileManager = .default) throws {
         for source in sources {
-            let target = availableDestination(for: source, in: destination, fileManager: fileManager)
-            try fileManager.copyItem(at: source, to: target)
+            let originalTarget = destination.appendingPathComponent(source.lastPathComponent)
+            if fileManager.fileExists(atPath: originalTarget.path) {
+                switch collisionPolicy {
+                case .keepBoth:
+                    try fileManager.copyItem(at: source, to: availableDestination(for: source, in: destination, fileManager: fileManager))
+                case .skip:
+                    continue
+                case .replace:
+                    try fileManager.removeItem(at: originalTarget)
+                    try fileManager.copyItem(at: source, to: originalTarget)
+                }
+            } else {
+                try fileManager.copyItem(at: source, to: originalTarget)
+            }
         }
+    }
+
+    static func hasCollisions(_ sources: [URL], in destination: URL, fileManager: FileManager = .default) -> Bool {
+        sources.contains { fileManager.fileExists(atPath: destination.appendingPathComponent($0.lastPathComponent).path) }
     }
 
     static func availableDestination(for source: URL, in directory: URL, fileManager: FileManager = .default) -> URL {
