@@ -55,6 +55,7 @@
 "transfer.copying" = "Копирование";
 "transfer.completed" = "Готово";
 "transfer.failed" = "Ошибка";
+"transfer.insufficientSpace" = "На томе назначения недостаточно свободного места для копирования.";
 "transfer.conflict" = "Конфликты имён";
 "transfer.conflictKeepBoth" = "Сохранить оба";
 "transfer.conflictSkip" = "Пропускать существующие";

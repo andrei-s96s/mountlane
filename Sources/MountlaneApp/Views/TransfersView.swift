@@ -18,6 +18,7 @@ struct TransfersView: View {
                 List(transferStore.operations) { operation in
                     VStack(alignment: .leading, spacing: 5) {
                         Text(L10n.text("transfer.summary", Int64(operation.sourceURLs.count), operation.destinationURL.lastPathComponent))
+                        Text(ByteCountFormatter.string(fromByteCount: operation.totalBytes, countStyle: .file)).font(.caption).foregroundStyle(.secondary)
                         HStack {
                             if case .copying = operation.state { ProgressView().controlSize(.small) }
                             Text(L10n.text(operation.state.localizationKey)).font(.caption).foregroundStyle(.secondary)

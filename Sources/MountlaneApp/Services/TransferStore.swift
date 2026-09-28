@@ -9,9 +9,12 @@ private enum CopyResult: Sendable {
 final class TransferStore: ObservableObject {
     @Published private(set) var operations: [TransferOperation] = []
 
-    func copy(_ sourceURLs: [URL], to destinationURL: URL, collisionPolicy: CollisionPolicy) {
+    func copy(_ sourceURLs: [URL], to destinationURL: URL, collisionPolicy: CollisionPolicy) throws {
         guard !sourceURLs.isEmpty else { return }
-        let operation = TransferOperation(sourceURLs: sourceURLs, destinationURL: destinationURL, collisionPolicy: collisionPolicy)
+        let totalBytes = try CopyEngine.totalSize(of: sourceURLs)
+        let available = try destinationURL.resourceValues(forKeys: [.volumeAvailableCapacityKey]).volumeAvailableCapacity
+        guard available == nil || totalBytes <= Int64(available!) else { throw CopyEngineError.insufficientSpace }
+        let operation = TransferOperation(sourceURLs: sourceURLs, destinationURL: destinationURL, collisionPolicy: collisionPolicy, totalBytes: totalBytes)
         operations.insert(operation, at: 0)
         let operationID = operation.id
 
@@ -47,6 +50,19 @@ final class TransferStore: ObservableObject {
 }
 
 enum CopyEngine {
+    static func totalSize(of sources: [URL], fileManager: FileManager = .default) throws -> Int64 {
+        try sources.reduce(0) { total, url in
+            let values = try url.resourceValues(forKeys: [.isDirectoryKey, .fileSizeKey])
+            if values.isDirectory == true {
+                let enumerator = fileManager.enumerator(at: url, includingPropertiesForKeys: [.fileSizeKey], options: [.skipsHiddenFiles])
+                let nested = try (enumerator?.allObjects as? [URL] ?? []).reduce(Int64(0)) { partial, child in
+                    partial + Int64(try child.resourceValues(forKeys: [.fileSizeKey]).fileSize ?? 0)
+                }
+                return total + nested
+            }
+            return total + Int64(values.fileSize ?? 0)
+        }
+    }
     static func copy(_ sources: [URL], to destination: URL, collisionPolicy: CollisionPolicy, fileManager: FileManager = .default) throws {
         for source in sources {
             let originalTarget = destination.appendingPathComponent(source.lastPathComponent)
@@ -83,4 +99,9 @@ enum CopyEngine {
         }
         return candidate
     }
+}
+
+enum CopyEngineError: LocalizedError {
+    case insufficientSpace
+    var errorDescription: String? { L10n.text("transfer.insufficientSpace") }
 }

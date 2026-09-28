@@ -37,14 +37,16 @@ struct TransferOperation: Identifiable, Equatable {
     let sourceURLs: [URL]
     let destinationURL: URL
     let collisionPolicy: CollisionPolicy
+    let totalBytes: Int64
     var state: TransferState
     let startedAt: Date
 
-    init(sourceURLs: [URL], destinationURL: URL, collisionPolicy: CollisionPolicy) {
+    init(sourceURLs: [URL], destinationURL: URL, collisionPolicy: CollisionPolicy, totalBytes: Int64) {
         id = UUID()
         self.sourceURLs = sourceURLs
         self.destinationURL = destinationURL
         self.collisionPolicy = collisionPolicy
+        self.totalBytes = totalBytes
         state = .queued
         startedAt = Date()
     }

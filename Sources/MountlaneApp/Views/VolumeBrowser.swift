@@ -145,7 +145,8 @@ struct VolumeBrowser: View {
     private func beginCopy() {
         guard let destination = pendingDestination else { return }
         let sources = items.filter { selection.contains($0.id) }.map(\.url)
-        transferStore.copy(sources, to: destination, collisionPolicy: collisionPolicy)
+        do { try transferStore.copy(sources, to: destination, collisionPolicy: collisionPolicy) }
+        catch { errorMessage = error.localizedDescription }
         pendingDestination = nil
     }
 

@@ -55,6 +55,7 @@
 "transfer.copying" = "Copying";
 "transfer.completed" = "Completed";
 "transfer.failed" = "Failed";
+"transfer.insufficientSpace" = "The destination volume does not have enough free space for this copy.";
 "transfer.conflict" = "Name conflicts";
 "transfer.conflictKeepBoth" = "Keep both";
 "transfer.conflictSkip" = "Skip existing";
