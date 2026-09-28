@@ -74,7 +74,7 @@ private struct VolumeRow: View {
     var body: some View {
         HStack(spacing: 10) {
             Image(systemName: volume.isRemovable ? "externaldrive.fill" : "internaldrive.fill")
-                .foregroundStyle(volume.isReadOnly ? .secondary : .accent)
+                .foregroundStyle(volume.isReadOnly ? Color.secondary : Color.accentColor)
             VStack(alignment: .leading, spacing: 2) {
                 Text(volume.name).lineLimit(1)
                 Text("\(volume.fileSystem) · \(L10n.text(volume.accessModeKey))")

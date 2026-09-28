@@ -36,7 +36,7 @@ final class VolumeStore: ObservableObject {
         let keys: Set<URLResourceKey> = [
             .volumeNameKey, .volumeLocalizedNameKey, .volumeUUIDStringKey,
             .volumeIsReadOnlyKey, .volumeIsRemovableKey, .volumeIsEjectableKey,
-            .volumeTotalCapacityKey, .volumeAvailableCapacityKey, .volumeFileSystemTypeKey
+            .volumeTotalCapacityKey, .volumeAvailableCapacityKey, .volumeLocalizedFormatDescriptionKey
         ]
         let urls = FileManager.default.mountedVolumeURLs(
             includingResourceValuesForKeys: Array(keys),
@@ -50,7 +50,7 @@ final class VolumeStore: ObservableObject {
                 id: values.volumeUUIDString ?? url.path,
                 url: url,
                 name: name,
-                fileSystem: displayFileSystem(values.volumeFileSystemType),
+                fileSystem: values.volumeLocalizedFormatDescription ?? L10n.text("format.unknown"),
                 isReadOnly: values.volumeIsReadOnly ?? true,
                 isRemovable: values.volumeIsRemovable ?? false,
                 isEjectable: values.volumeIsEjectable ?? false,
@@ -65,23 +65,9 @@ final class VolumeStore: ObservableObject {
     }
 
     func eject(_ volume: VolumeInfo) {
-        NSWorkspace.shared.unmountAndEjectDevice(at: volume.url) { [weak self] error in
-            Task { @MainActor in
-                if let error { self?.lastError = error.localizedDescription }
-                self?.refresh()
-            }
+        if !NSWorkspace.shared.unmountAndEjectDevice(at: volume.url) {
+            lastError = L10n.text("eject.failed")
         }
-    }
-
-    private func displayFileSystem(_ identifier: String?) -> String {
-        switch identifier?.lowercased() {
-        case "apfs": "APFS"
-        case "hfs": "Mac OS Extended"
-        case "msdos": "FAT32"
-        case "exfat": "exFAT"
-        case "ntfs": "NTFS"
-        case let value?: value.uppercased()
-        case nil: L10n.text("format.unknown")
-        }
+        refresh()
     }
 }

@@ -72,7 +72,7 @@ private struct VolumeHeader: View {
         HStack(spacing: 16) {
             Image(systemName: volume.isRemovable ? "externaldrive.fill" : "internaldrive.fill")
                 .font(.system(size: 34))
-                .foregroundStyle(volume.isReadOnly ? .secondary : .accent)
+                .foregroundStyle(volume.isReadOnly ? Color.secondary : Color.accentColor)
             VStack(alignment: .leading, spacing: 5) {
                 HStack {
                     Text(volume.fileSystem).font(.headline)
@@ -111,7 +111,7 @@ private struct FileRow: View {
     var body: some View {
         HStack(spacing: 10) {
             Image(systemName: item.isDirectory ? "folder.fill" : "doc")
-                .foregroundStyle(item.isDirectory ? .accent : .secondary)
+                .foregroundStyle(item.isDirectory ? Color.accentColor : Color.secondary)
             Text(item.name)
             Spacer()
             if let size = item.size, !item.isDirectory {

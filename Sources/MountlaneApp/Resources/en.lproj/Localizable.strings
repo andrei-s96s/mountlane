@@ -18,6 +18,7 @@
 "action.ok" = "OK";
 "action.done" = "Done";
 "eject.hint" = "Safely eject this volume";
+"eject.failed" = "macOS could not eject this volume. Make sure no app is using its files, then try again.";
 "error.title" = "Something went wrong";
 "settings.title" = "Settings";
 "settings.language" = "App language";
