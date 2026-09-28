@@ -25,7 +25,6 @@ GitHub Actions builds the release configuration, validates both localization fil
 
 To create a release artifact, push a semantic version tag such as `v0.1.0`. The release workflow builds the app executable, packages it with its localization resources and the README, and creates a GitHub Release. This initial artifact is **not code-signed or notarized**; release distribution outside developer testing must add Apple Developer signing and notarization secrets first.
 
-Before creating a release tag, complete the [real-device checklist](docs/RELEASE_CHECKLIST.md). The current version is in [VERSION](VERSION), and release changes are in [CHANGELOG.md](CHANGELOG.md).
 
 ## Roadmap
 
