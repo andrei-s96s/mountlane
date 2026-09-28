@@ -10,10 +10,6 @@ final class VolumeStore: ObservableObject {
     private var observers: [NSObjectProtocol] = []
     private var hasStarted = false
 
-    deinit {
-        observers.forEach(NotificationCenter.default.removeObserver)
-    }
-
     func start() {
         guard !hasStarted else { return }
         hasStarted = true
