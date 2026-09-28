@@ -35,6 +35,7 @@ jobs:
         run: |
           mkdir -p dist/Mountlane
           cp .build/release/Mountlane dist/Mountlane/
+          find .build/release -maxdepth 1 -type d -name '*.bundle' -exec cp -R {} dist/Mountlane/ \;
           cp README.md dist/Mountlane/
           ditto -c -k --sequesterRsrc --keepParent dist/Mountlane "dist/Mountlane-${RELEASE_TAG}-macOS.zip"
 
