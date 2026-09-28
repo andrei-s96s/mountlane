@@ -38,6 +38,18 @@ To create a release artifact, push a semantic version tag such as `v0.1.0`. The 
 - Never ship a bundled third-party file-system driver without license, compatibility and real-device tests.
 - Always use macOS' normal unmount/eject path.
 
-## License
+## NTFS, FUSE-T, and NTFS-3G
 
-License selection is intentionally deferred until the driver-integration strategy is decided. Do not copy GPL driver code into this project without making the corresponding licensing decision.
+Mountlane does **not include, redistribute, modify, or compile** FUSE-T or NTFS-3G. It only checks for FUSE-T and a locally installed `ntfs-3g`, then invokes that user-installed driver to remount a specific NTFS volume only after explicit user action.
+
+Users install these components from their official sources and accept their terms themselves. Mountlane is not affiliated with FUSE-T, NTFS-3G, or their authors, and does not claim endorsement.
+
+FUSE-T publishes separate binary-distribution terms, including a commercial-license requirement for commercial use or bundling with commercial software. NTFS-3G is GPL-licensed. Before either component is included in a `.dmg`, installer, or release archive, obtain written confirmation of FUSE-T distribution rights and separately review GPL obligations. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+
+## Mountlane license
+
+Mountlane source code is GPL-2.0-or-later. This applies to Mountlane code only and does not mean that FUSE-T or NTFS-3G are included in a release. The complete text is in [LICENSE](LICENSE).
+
+## Project support
+
+Mountlane remains completely free: no feature, including NTFS support, will be paid. A future voluntary donation link will not unlock features or add advertising or tracking. Third-party terms will be reviewed again before it is published.

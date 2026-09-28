@@ -37,6 +37,7 @@ jobs:
           cp .build/release/Mountlane dist/Mountlane/
           find .build/release -maxdepth 1 -type d -name '*.bundle' -exec cp -R {} dist/Mountlane/ \;
           cp README.md dist/Mountlane/
+          cp README.en.md THIRD_PARTY_NOTICES.md LICENSE dist/Mountlane/
           ditto -c -k --sequesterRsrc --keepParent dist/Mountlane "dist/Mountlane-${RELEASE_TAG}-macOS.zip"
 
       - name: Publish GitHub release
