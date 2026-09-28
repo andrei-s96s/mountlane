@@ -2,9 +2,9 @@
 
 ## Current distribution status
 
-Mountlane does not ship FUSE-T, NTFS-3G, macFUSE, a filesystem extension, a kernel extension, or any binary built from those projects. The current release archive contains only Mountlane and its own resources.
+Mountlane does not ship, download, install, or redistribute FUSE-T, NTFS-3G, macFUSE, a filesystem extension, a kernel extension, or any binary built from those projects. Every release archive contains only Mountlane and its own resources.
 
-The NTFS setup assistant links users to official component sources. Driver discovery checks local paths only. The remount action runs a driver already installed on the user's Mac, only after confirmation and macOS administrator authorization.
+The **Prepare NTFS** assistant checks whether the components are already present and links users to official component sources. Driver discovery checks local paths only. The remount action runs a driver already installed on the user's Mac, only after confirmation and macOS administrator authorization.
 
 ## FUSE-T
 
@@ -12,7 +12,7 @@ The NTFS setup assistant links users to official component sources. Driver disco
 - License terms: <https://github.com/macos-fuse-t/fuse-t/blob/main/License.txt>
 - Mountlane relationship: not included or redistributed.
 
-The FUSE-T binary license states that commercial use or bundling with commercial software requires a commercial license. Do not bundle its package, framework, libraries, headers, server components, or a derivative build into Mountlane without written permission from the FUSE-T authors.
+The FUSE-T binary license states that commercial use or bundling with commercial software requires a commercial license. Mountlane's distribution policy prohibits bundling its package, framework, libraries, headers, server components, or a derivative build.
 
 ## NTFS-3G
 
@@ -20,7 +20,7 @@ The FUSE-T binary license states that commercial use or bundling with commercial
 - License: GNU General Public License (GPL).
 - Mountlane relationship: not included, linked, compiled, or redistributed.
 
-If a future Mountlane release distributes NTFS-3G source or binary, it must first satisfy every applicable GPL distribution obligation, including providing the corresponding source and required notices. Obtain legal review before changing the current external-component model.
+Mountlane's distribution policy prohibits distributing NTFS-3G source or binary. Any proposal to change this external-component model requires a new license-compliance review before implementation.
 
 ## Trademarks and endorsement
 
@@ -33,6 +33,6 @@ Before publishing a release, confirm all of the following:
 1. No third-party filesystem runtime or driver is in the application bundle, `.dmg`, ZIP archive, installer, or build cache uploaded as an artifact.
 2. The release notes identify NTFS-3G and FUSE-T as optional external dependencies, not included components.
 3. No logo, badge, or wording implies sponsorship or certification.
-4. If the distribution model changes, stop the release and obtain written licensing approval plus a GPL compliance review first.
+4. Do not add an external driver to a release. Any proposal to change this policy requires a separate license-compliance review before implementation.
 
 This file is an engineering notice, not legal advice.

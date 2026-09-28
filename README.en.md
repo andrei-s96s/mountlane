@@ -44,7 +44,7 @@ Mountlane does **not include, redistribute, modify, or compile** FUSE-T or NTFS-
 
 Users install these components from their official sources and accept their terms themselves. Mountlane is not affiliated with FUSE-T, NTFS-3G, or their authors, and does not claim endorsement.
 
-FUSE-T publishes separate binary-distribution terms, including a commercial-license requirement for commercial use or bundling with commercial software. NTFS-3G is GPL-licensed. Before either component is included in a `.dmg`, installer, or release archive, obtain written confirmation of FUSE-T distribution rights and separately review GPL obligations. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+FUSE-T publishes separate binary-distribution terms, including a commercial-license requirement for commercial use or bundling with commercial software. NTFS-3G is GPL-licensed. Mountlane does not plan to include either component in a `.dmg`, installer, or release archive; the Prepare NTFS button only checks the system and links to official sources. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
 ## Mountlane license
 
