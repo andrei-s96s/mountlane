@@ -1,41 +1,43 @@
 # Mountlane
 
-Native macOS disk and file manager for working across file systems.
+[English](README.en.md)
 
-Mountlane starts with the file systems macOS supports natively (APFS, HFS+, FAT32 and exFAT) and makes each volume's actual access mode explicit. Support for NTFS, ext4 and other formats is deliberately separated into driver modules: a file manager cannot safely make a read-only file system writable by itself.
+Нативный менеджер дисков и файлов для macOS, рассчитанный на работу с разными файловыми системами.
 
-## First milestone
+Mountlane начинает со штатно поддерживаемых macOS форматов — APFS, HFS+, FAT32 и exFAT — и явно показывает фактический режим доступа каждого тома. Поддержка NTFS, ext4 и других форматов будет подключаться отдельными драйверными модулями: файловый менеджер сам по себе не может безопасно сделать том, доступный только для чтения, доступным для записи.
 
-- show mounted volumes and their file-system format;
-- make read-only/read-write state, capacity and diagnostics clear;
-- browse files and open the selected volume in Finder;
-- safely eject removable/ejectable volumes;
-- offer a Russian and English interface, with system-language detection;
-- reserve an optional Support item for a future donation link.
+## Первый этап
 
-## Run in Xcode
+- список подключённых томов и их файловых систем;
+- понятный статус «только чтение» или «чтение и запись», ёмкость и диагностика;
+- просмотр файлов и открытие выбранного тома в Finder;
+- безопасное извлечение съёмных носителей;
+- русский, английский и выбор системного языка в приложении;
+- отдельный пункт поддержки проекта для будущей ссылки на пожертвования.
 
-Open `Package.swift` in Xcode 16 or newer, select the **Mountlane** scheme, then run it. The current deployment target is macOS 15+, so it is compatible with Apple Silicon Macs running newer macOS releases.
+## Запуск в Xcode
 
-## Continuous integration and releases
+Откройте `Package.swift` в Xcode 16 или новее, выберите схему **Mountlane** и запустите приложение. Минимальная версия системы — macOS 15; приложение совместимо с Apple Silicon и более новыми версиями macOS.
 
-GitHub Actions builds the release configuration, validates both localization files and runs the unit tests on macOS for every push to `main` and every pull request targeting it.
+## Непрерывная интеграция и релизы
 
-To create a release artifact, push a semantic version tag such as `v0.1.0`. The release workflow builds the app executable, packages it with the README and creates a GitHub Release. This initial artifact is **not code-signed or notarized**; release distribution outside developer testing must add Apple Developer signing and notarization secrets first.
+GitHub Actions собирает release-конфигурацию, проверяет обе локализации и запускает unit-тесты на macOS при каждом push в `main` и в каждом pull request, нацеленном на неё.
 
-## Roadmap
+Чтобы создать release-артефакт, отправьте семантический тег, например `v0.1.0`. Workflow соберёт исполняемый файл, упакует его вместе с ресурсами локализации и README, а затем создаст GitHub Release. Первый вариант артефакта **не подписывается и не проходит notarization**; перед распространением за пределами тестирования нужно добавить секреты Apple Developer для подписи и notarization.
 
-1. **Foundation (current):** native volume discovery and a read-only-safe browser.
-2. **Transfers:** queued copying, collision handling, verification, progress and operation log.
-3. **Drivers:** diagnose optional NTFS/ext4 providers and expose only the operations they reliably support.
-4. **Support:** an optional donation destination configured by the project owner; no donation SDK or tracking is included before that choice.
+## План развития
 
-## Safety principles
+1. **Основа (сейчас):** обнаружение томов средствами macOS и безопасный браузер с режимом чтения.
+2. **Передача файлов:** очередь копирования, обработка конфликтов имён, проверка результата, прогресс и журнал операций.
+3. **Драйверы:** диагностика подключённых компонентов NTFS/ext4 и отображение только надёжно поддерживаемых ими действий.
+4. **Поддержка:** необязательная ссылка на пожертвования, выбранная владельцем проекта; до этого момента приложение не содержит платёжных SDK и трекеров.
 
-- Never label a volume writable unless macOS reports it as writable.
-- Never ship a bundled third-party file-system driver without license, compatibility and real-device tests.
-- Always use macOS' normal unmount/eject path.
+## Принципы безопасности
 
-## License
+- Не показывать том как доступный для записи, пока macOS не подтвердит это.
+- Не включать сторонний драйвер файловой системы без проверки лицензии, совместимости и на реальных носителях.
+- Всегда использовать штатный механизм macOS для отключения и извлечения томов.
 
-License selection is intentionally deferred until the driver-integration strategy is decided. Do not copy GPL driver code into this project without making the corresponding licensing decision.
+## Лицензия
+
+Выбор лицензии отложен до решения по интеграции драйверов. Не копируйте GPL-код драйверов в этот проект, пока не принято соответствующее лицензионное решение.
