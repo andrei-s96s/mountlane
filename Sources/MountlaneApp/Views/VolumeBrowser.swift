@@ -8,6 +8,7 @@ private enum RemountResult: Sendable {
 
 struct VolumeBrowser: View {
     @EnvironmentObject private var volumeStore: VolumeStore
+    @EnvironmentObject private var transferStore: TransferStore
     let volume: VolumeInfo
     @State private var currentDirectory: URL
     @State private var items: [FileItem] = []
@@ -18,6 +19,7 @@ struct VolumeBrowser: View {
     @State private var isRemounting = false
     @State private var showingRemountConfirmation = false
     @State private var showingNTFSSetup = false
+    @State private var selection = Set<FileItem.ID>()
 
     init(volume: VolumeInfo) {
         self.volume = volume
@@ -51,14 +53,10 @@ struct VolumeBrowser: View {
             }
             .padding(12)
             Divider()
-            List(visibleItems) { item in
-                Button {
-                    if item.isDirectory { currentDirectory = item.url; loadItems() }
-                    else { NSWorkspace.shared.open(item.url) }
-                } label: {
-                    FileRow(item: item)
-                }
-                .buttonStyle(.plain)
+            List(visibleItems, selection: $selection) { item in
+                FileRow(item: item)
+                    .contentShape(Rectangle())
+                    .onTapGesture(count: 2) { open(item) }
                 .contextMenu { FileActions(item: item) }
             }
             .overlay {
@@ -79,6 +77,8 @@ struct VolumeBrowser: View {
                     }
                 }
                 Toggle(L10n.text("files.showHidden"), isOn: $showHiddenFiles)
+                Button(L10n.text("transfer.copy"), systemImage: "doc.on.doc") { chooseCopyDestination() }
+                    .disabled(selection.isEmpty)
             }
         }
         .task(id: currentDirectory) { loadItems() }
@@ -103,6 +103,22 @@ struct VolumeBrowser: View {
     private func goUp() {
         guard currentDirectory != volume.url else { return }
         currentDirectory.deleteLastPathComponent()
+    }
+
+    private func open(_ item: FileItem) {
+        if item.isDirectory { currentDirectory = item.url; loadItems() }
+        else { NSWorkspace.shared.open(item.url) }
+    }
+
+    private func chooseCopyDestination() {
+        let panel = NSOpenPanel()
+        panel.canChooseFiles = false
+        panel.canChooseDirectories = true
+        panel.allowsMultipleSelection = false
+        panel.prompt = L10n.text("transfer.copyHere")
+        guard panel.runModal() == .OK, let destination = panel.url else { return }
+        let sources = items.filter { selection.contains($0.id) }.map(\.url)
+        transferStore.copy(sources, to: destination)
     }
 
     private var visibleItems: [FileItem] {

@@ -5,6 +5,7 @@ struct ContentView: View {
     @EnvironmentObject private var volumeStore: VolumeStore
     @State private var showingSettings = false
     @State private var showingSupport = false
+    @State private var showingTransfers = false
 
     private var selectedVolume: VolumeInfo? {
         volumeStore.volumes.first { $0.id == volumeStore.selectedVolumeID }
@@ -30,10 +31,13 @@ struct ContentView: View {
                     .help(L10n.text("toolbar.settings"))
                 Button(L10n.text("toolbar.support"), systemImage: "heart") { showingSupport = true }
                     .help(L10n.text("toolbar.support"))
+                Button(L10n.text("toolbar.transfers"), systemImage: "arrow.left.arrow.right") { showingTransfers = true }
+                    .help(L10n.text("toolbar.transfers"))
             }
         }
         .sheet(isPresented: $showingSettings) { SettingsView() }
         .sheet(isPresented: $showingSupport) { SupportView() }
+        .sheet(isPresented: $showingTransfers) { TransfersView() }
         .alert(L10n.text("error.title"), isPresented: Binding(
             get: { volumeStore.lastError != nil },
             set: { if !$0 { volumeStore.lastError = nil } }

@@ -3,6 +3,7 @@
 "toolbar.refresh" = "Refresh";
 "toolbar.settings" = "Settings";
 "toolbar.support" = "Support Mountlane";
+"toolbar.transfers" = "Transfers";
 "sidebar.volumes" = "Volumes";
 "empty.title" = "No mounted volumes";
 "empty.message" = "Connect a disk or refresh the volume list.";
@@ -43,6 +44,17 @@
 "volume.capacityUnavailable" = "Capacity information unavailable";
 "action.openFinder" = "Open in Finder";
 "action.copyPath" = "Copy path";
+"transfer.title" = "Transfers";
+"transfer.copy" = "Copy selected";
+"transfer.copyHere" = "Copy here";
+"transfer.clear" = "Clear finished";
+"transfer.empty" = "No transfers yet";
+"transfer.emptyMessage" = "Select files, then choose Copy selected.";
+"transfer.summary" = "%lld item(s) → %@";
+"transfer.queued" = "Queued";
+"transfer.copying" = "Copying";
+"transfer.completed" = "Completed";
+"transfer.failed" = "Failed";
 "action.eject" = "Eject";
 "action.ok" = "OK";
 "action.done" = "Done";

@@ -39,6 +39,17 @@ final class VolumeInfoTests: XCTestCase {
         XCTAssertThrowsError(try NTFSRemountPlan.make(deviceIdentifier: "disk4; rm -rf /", providerPath: "/tmp/driver"))
     }
 
+    func testCopyDestinationKeepsBothNames() {
+        let source = URL(fileURLWithPath: "/origin/report.pdf")
+        let manager = FileManager.default
+        let temporary = manager.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+        defer { try? manager.removeItem(at: temporary) }
+        try? manager.createDirectory(at: temporary, withIntermediateDirectories: true)
+        manager.createFile(atPath: temporary.appendingPathComponent("report.pdf").path, contents: Data())
+
+        XCTAssertEqual(CopyEngine.availableDestination(for: source, in: temporary).lastPathComponent, "report 2.pdf")
+    }
+
     private func makeVolume(isReadOnly: Bool, total: Int64?, available: Int64?, fileSystem: String = "exFAT") -> VolumeInfo {
         VolumeInfo(
             id: "test-volume",

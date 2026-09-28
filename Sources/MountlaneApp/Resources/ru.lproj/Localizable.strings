@@ -3,6 +3,7 @@
 "toolbar.refresh" = "Обновить";
 "toolbar.settings" = "Настройки";
 "toolbar.support" = "Поддержать Mountlane";
+"toolbar.transfers" = "Передачи";
 "sidebar.volumes" = "Тома";
 "empty.title" = "Нет подключённых томов";
 "empty.message" = "Подключите диск или обновите список томов.";
@@ -43,6 +44,17 @@
 "volume.capacityUnavailable" = "Сведения о ёмкости недоступны";
 "action.openFinder" = "Открыть в Finder";
 "action.copyPath" = "Скопировать путь";
+"transfer.title" = "Передачи";
+"transfer.copy" = "Копировать выбранное";
+"transfer.copyHere" = "Копировать сюда";
+"transfer.clear" = "Очистить завершённые";
+"transfer.empty" = "Передач пока нет";
+"transfer.emptyMessage" = "Выберите файлы, затем нажмите «Копировать выбранное».";
+"transfer.summary" = "%lld объект(ов) → %@";
+"transfer.queued" = "В очереди";
+"transfer.copying" = "Копирование";
+"transfer.completed" = "Готово";
+"transfer.failed" = "Ошибка";
 "action.eject" = "Извлечь";
 "action.ok" = "ОК";
 "action.done" = "Готово";
