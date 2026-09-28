@@ -17,6 +17,7 @@ struct VolumeBrowser: View {
     @State private var showHiddenFiles = false
     @State private var isRemounting = false
     @State private var showingRemountConfirmation = false
+    @State private var showingNTFSSetup = false
 
     init(volume: VolumeInfo) {
         self.volume = volume
@@ -27,9 +28,12 @@ struct VolumeBrowser: View {
         VStack(spacing: 0) {
             VolumeHeader(volume: volume)
             if volume.isNTFS {
-                NTFSStatusCard(volume: volume, isRemounting: isRemounting) {
-                    showingRemountConfirmation = true
-                }
+                NTFSStatusCard(
+                    volume: volume,
+                    isRemounting: isRemounting,
+                    remount: { showingRemountConfirmation = true },
+                    prepare: { showingNTFSSetup = true }
+                )
                     .padding(.horizontal, 20)
                     .padding(.bottom, 14)
             }
@@ -88,6 +92,7 @@ struct VolumeBrowser: View {
         } message: {
             Text(L10n.text("ntfs.remountWarning"))
         }
+        .sheet(isPresented: $showingNTFSSetup) { NTFSSetupView() }
     }
 
     private func loadItems() {

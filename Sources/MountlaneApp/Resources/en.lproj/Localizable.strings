@@ -22,6 +22,17 @@
 "ntfs.providerDetectedWritable" = "This NTFS volume is mounted with write access.";
 "ntfs.providerMissing" = "macOS can read this NTFS volume. For reliable write access, install a compatible FUSE-T and NTFS-3G provider.";
 "ntfs.learnMore" = "FUSE-T installation options";
+"ntfs.prepare" = "Prepare NTFS";
+"ntfs.setupTitle" = "Prepare NTFS support";
+"ntfs.setupSubtitle" = "Mountlane checks the components required for NTFS write access.";
+"ntfs.fuseT" = "FUSE-T runtime";
+"ntfs.fuseTDetail" = "A userspace filesystem runtime for current macOS.";
+"ntfs.driver" = "NTFS-3G driver";
+"ntfs.driverDetail" = "Mountlane checks common Apple Silicon and Homebrew installation paths.";
+"ntfs.downloadFuseT" = "Download FUSE-T from the official source";
+"ntfs.getDriver" = "Open the NTFS-3G source project";
+"ntfs.setupSafety" = "Install each component only from its official source. After installation, return here and choose Check again.";
+"ntfs.checkAgain" = "Check again";
 "ntfs.safety" = "Before enabling write access, safely eject the disk from Windows and disable Windows Fast Startup or hibernation for that disk.";
 "ntfs.enableWrite" = "Enable write access";
 "ntfs.remountTitle" = "Enable NTFS write access?";

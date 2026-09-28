@@ -22,6 +22,17 @@
 "ntfs.providerDetectedWritable" = "Этот NTFS-том подключён с доступом на запись.";
 "ntfs.providerMissing" = "macOS может читать этот NTFS-том. Для надёжной записи установите совместимый провайдер FUSE-T и NTFS-3G.";
 "ntfs.learnMore" = "Варианты установки FUSE-T";
+"ntfs.prepare" = "Подготовить NTFS";
+"ntfs.setupTitle" = "Подготовка поддержки NTFS";
+"ntfs.setupSubtitle" = "Mountlane проверит компоненты, необходимые для записи на NTFS.";
+"ntfs.fuseT" = "Среда выполнения FUSE-T";
+"ntfs.fuseTDetail" = "Среда пользовательских файловых систем для современных macOS.";
+"ntfs.driver" = "Драйвер NTFS-3G";
+"ntfs.driverDetail" = "Mountlane проверяет типичные пути установки Apple Silicon и Homebrew.";
+"ntfs.downloadFuseT" = "Скачать FUSE-T из официального источника";
+"ntfs.getDriver" = "Открыть исходный проект NTFS-3G";
+"ntfs.setupSafety" = "Устанавливайте каждый компонент только из официального источника. После установки вернитесь сюда и нажмите «Проверить снова».";
+"ntfs.checkAgain" = "Проверить снова";
 "ntfs.safety" = "Перед включением записи безопасно извлеките диск в Windows и отключите для него Fast Startup или гибернацию Windows.";
 "ntfs.enableWrite" = "Включить запись";
 "ntfs.remountTitle" = "Включить запись на NTFS?";

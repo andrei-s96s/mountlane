@@ -4,6 +4,7 @@ struct NTFSStatusCard: View {
     let volume: VolumeInfo
     let isRemounting: Bool
     let remount: () -> Void
+    let prepare: () -> Void
     private let provider = NTFSProviderStatus.detect()
 
     var body: some View {
@@ -28,8 +29,7 @@ struct NTFSStatusCard: View {
                 } else {
                     Text(L10n.text("ntfs.providerMissing"))
                         .foregroundStyle(.secondary)
-                    Link(L10n.text("ntfs.learnMore"), destination: URL(string: "https://www.fuse-t.org/downloads")!)
-                        .font(.caption)
+                    Button(L10n.text("ntfs.prepare"), systemImage: "wrench.and.screwdriver") { prepare() }
                 }
 
                 Text(L10n.text("ntfs.safety"))

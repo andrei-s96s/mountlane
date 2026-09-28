@@ -46,6 +46,19 @@ enum NTFSProviderStatus: Equatable {
     }
 }
 
+struct NTFSRuntimeStatus: Equatable {
+    let provider: NTFSProviderStatus
+    let isFuseTInstalled: Bool
+
+    static func detect(fileManager: FileManager = .default) -> NTFSRuntimeStatus {
+        NTFSRuntimeStatus(
+            provider: .detect(fileManager: fileManager),
+            isFuseTInstalled: fileManager.fileExists(atPath: "/Library/Application Support/fuse-t")
+                || fileManager.fileExists(atPath: "/Library/Frameworks/fuse-t.framework")
+        )
+    }
+}
+
 struct FileItem: Identifiable, Hashable {
     let url: URL
     let name: String
