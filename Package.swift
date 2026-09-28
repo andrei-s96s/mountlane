@@ -3,6 +3,7 @@ import PackageDescription
 
 let package = Package(
     name: "Mountlane",
+    defaultLocalization: "en",
     platforms: [.macOS(.v15)],
     products: [
         .executable(name: "Mountlane", targets: ["Mountlane"])
@@ -10,6 +11,7 @@ let package = Package(
     targets: [
         .executableTarget(
             name: "Mountlane",
+            path: "Sources/MountlaneApp",
             resources: [.process("Resources")]
         ),
         .testTarget(
