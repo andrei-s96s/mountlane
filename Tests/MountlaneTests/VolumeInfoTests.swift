@@ -19,6 +19,13 @@ final class VolumeInfoTests: XCTestCase {
         XCTAssertNil(makeVolume(isReadOnly: false, total: nil, available: nil).usedFraction)
     }
 
+    func testSortKeepsFoldersBeforeFiles() {
+        let folder = FileItem(url: URL(fileURLWithPath: "/Folder"), name: "Folder", isDirectory: true, size: nil, modificationDate: nil)
+        let file = FileItem(url: URL(fileURLWithPath: "/File.txt"), name: "File.txt", isDirectory: false, size: 12, modificationDate: nil)
+
+        XCTAssertEqual(FileSortOrder.size.sorted([file, folder]).map(\.name), ["Folder", "File.txt"])
+    }
+
     private func makeVolume(isReadOnly: Bool, total: Int64?, available: Int64?) -> VolumeInfo {
         VolumeInfo(
             id: "test-volume",

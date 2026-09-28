@@ -7,6 +7,9 @@ struct VolumeBrowser: View {
     @State private var currentDirectory: URL
     @State private var items: [FileItem] = []
     @State private var errorMessage: String?
+    @State private var searchText = ""
+    @State private var sortOrder: FileSortOrder = .name
+    @State private var showHiddenFiles = false
 
     init(volume: VolumeInfo) {
         self.volume = volume
@@ -17,13 +20,12 @@ struct VolumeBrowser: View {
         VStack(spacing: 0) {
             VolumeHeader(volume: volume)
             Divider()
-            HStack {
+            HStack(spacing: 10) {
                 Button(action: goUp) { Image(systemName: "chevron.left") }
                     .disabled(currentDirectory == volume.url)
-                Text(currentDirectory.path(percentEncoded: false))
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(1)
+                Breadcrumbs(volumeURL: volume.url, currentDirectory: currentDirectory) { destination in
+                    currentDirectory = destination
+                }
                 Spacer()
                 Button(L10n.text("action.openFinder"), systemImage: "arrow.up.forward.app") {
                     NSWorkspace.shared.selectFile(nil, inFileViewerRootedAtPath: currentDirectory.path)
@@ -31,7 +33,7 @@ struct VolumeBrowser: View {
             }
             .padding(12)
             Divider()
-            List(items) { item in
+            List(visibleItems) { item in
                 Button {
                     if item.isDirectory { currentDirectory = item.url; loadItems() }
                     else { NSWorkspace.shared.open(item.url) }
@@ -39,28 +41,91 @@ struct VolumeBrowser: View {
                     FileRow(item: item)
                 }
                 .buttonStyle(.plain)
+                .contextMenu { FileActions(item: item) }
             }
             .overlay {
-                if items.isEmpty && errorMessage == nil {
+                if visibleItems.isEmpty && errorMessage == nil {
                     ContentUnavailableView(L10n.text("files.empty"), systemImage: "folder", description: Text(L10n.text("files.emptyMessage")))
                 }
             }
         }
         .navigationTitle(volume.name)
+        .searchable(text: $searchText, prompt: L10n.text("files.search"))
+        .toolbar {
+            ToolbarItemGroup(placement: .secondaryAction) {
+                Menu(L10n.text("files.sort"), systemImage: "arrow.up.arrow.down") {
+                    Picker(L10n.text("files.sort"), selection: $sortOrder) {
+                        Text(L10n.text("files.sortName")).tag(FileSortOrder.name)
+                        Text(L10n.text("files.sortDate")).tag(FileSortOrder.modificationDate)
+                        Text(L10n.text("files.sortSize")).tag(FileSortOrder.size)
+                    }
+                }
+                Toggle(L10n.text("files.showHidden"), isOn: $showHiddenFiles)
+            }
+        }
         .task(id: currentDirectory) { loadItems() }
+        .onChange(of: showHiddenFiles) { _, _ in loadItems() }
         .alert(L10n.text("error.title"), isPresented: Binding(
             get: { errorMessage != nil }, set: { if !$0 { errorMessage = nil } }
         )) { Button(L10n.text("action.ok"), role: .cancel) {} } message: { Text(errorMessage ?? "") }
     }
 
     private func loadItems() {
-        do { items = try FileBrowser.contents(of: currentDirectory); errorMessage = nil }
+        do { items = try FileBrowser.contents(of: currentDirectory, includingHiddenFiles: showHiddenFiles); errorMessage = nil }
         catch { items = []; errorMessage = error.localizedDescription }
     }
 
     private func goUp() {
         guard currentDirectory != volume.url else { return }
         currentDirectory.deleteLastPathComponent()
+    }
+
+    private var visibleItems: [FileItem] {
+        let filtered = searchText.isEmpty ? items : items.filter {
+            $0.name.localizedCaseInsensitiveContains(searchText)
+        }
+        return sortOrder.sorted(filtered)
+    }
+}
+
+private struct Breadcrumbs: View {
+    let volumeURL: URL
+    let currentDirectory: URL
+    let select: (URL) -> Void
+
+    var body: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 4) {
+                ForEach(path, id: \.self) { entry in
+                    if entry != volumeURL { Image(systemName: "chevron.right").font(.caption2).foregroundStyle(.tertiary) }
+                    Button(entry == volumeURL ? volumeURL.lastPathComponent : entry.lastPathComponent) { select(entry) }
+                        .buttonStyle(.plain)
+                        .font(.caption)
+                        .lineLimit(1)
+                }
+            }
+        }
+    }
+
+    private var path: [URL] {
+        let relativePath = currentDirectory.path.dropFirst(volumeURL.path.count)
+        return relativePath.split(separator: "/").reduce([volumeURL]) { result, component in
+            result + [result.last!.appendingPathComponent(String(component))]
+        }
+    }
+}
+
+private struct FileActions: View {
+    let item: FileItem
+
+    var body: some View {
+        Button(L10n.text("action.openFinder")) {
+            NSWorkspace.shared.activateFileViewerSelecting([item.url])
+        }
+        Button(L10n.text("action.copyPath")) {
+            NSPasteboard.general.clearContents()
+            NSPasteboard.general.setString(item.url.path(percentEncoded: false), forType: .string)
+        }
     }
 }
 

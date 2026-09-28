@@ -17,6 +17,7 @@ struct ContentView: View {
         } detail: {
             if let volume = selectedVolume {
                 VolumeBrowser(volume: volume)
+                    .id(volume.id)
             } else {
                 ContentUnavailableView(L10n.text("empty.title"), systemImage: "externaldrive.badge.questionmark", description: Text(L10n.text("empty.message")))
             }

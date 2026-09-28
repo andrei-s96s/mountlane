@@ -27,3 +27,25 @@ struct FileItem: Identifiable, Hashable {
 
     var id: URL { url }
 }
+
+enum FileSortOrder: String, CaseIterable, Identifiable {
+    case name
+    case modificationDate
+    case size
+
+    var id: String { rawValue }
+
+    func sorted(_ items: [FileItem]) -> [FileItem] {
+        items.sorted { lhs, rhs in
+            if lhs.isDirectory != rhs.isDirectory { return lhs.isDirectory }
+            switch self {
+            case .name:
+                return lhs.name.localizedStandardCompare(rhs.name) == .orderedAscending
+            case .modificationDate:
+                return (lhs.modificationDate ?? .distantPast) > (rhs.modificationDate ?? .distantPast)
+            case .size:
+                return (lhs.size ?? 0) > (rhs.size ?? 0)
+            }
+        }
+    }
+}
