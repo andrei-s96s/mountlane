@@ -1,6 +1,11 @@
 import AppKit
 import SwiftUI
 
+private enum RemountResult: Sendable {
+    case success
+    case failure(String)
+}
+
 struct VolumeBrowser: View {
     @EnvironmentObject private var volumeStore: VolumeStore
     let volume: VolumeInfo
@@ -107,10 +112,10 @@ struct VolumeBrowser: View {
         let volumeURL = volume.url
         isRemounting = true
         Task {
-            let result: Result<Void, String> = await Task.detached(priority: .userInitiated) {
+            let result: RemountResult = await Task.detached(priority: .userInitiated) {
                 do {
                     try NTFSRemounter.remount(volumeURL: volumeURL, providerPath: providerPath)
-                    return .success(())
+                    return .success
                 } catch {
                     return .failure(error.localizedDescription)
                 }
