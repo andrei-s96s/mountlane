@@ -10,6 +10,8 @@ struct VolumeBrowser: View {
     @State private var searchText = ""
     @State private var sortOrder: FileSortOrder = .name
     @State private var showHiddenFiles = false
+    @State private var isRemounting = false
+    @State private var showingRemountConfirmation = false
 
     init(volume: VolumeInfo) {
         self.volume = volume
@@ -20,7 +22,9 @@ struct VolumeBrowser: View {
         VStack(spacing: 0) {
             VolumeHeader(volume: volume)
             if volume.isNTFS {
-                NTFSStatusCard(volume: volume)
+                NTFSStatusCard(volume: volume, isRemounting: isRemounting) {
+                    showingRemountConfirmation = true
+                }
                     .padding(.horizontal, 20)
                     .padding(.bottom, 14)
             }
@@ -73,6 +77,12 @@ struct VolumeBrowser: View {
         .alert(L10n.text("error.title"), isPresented: Binding(
             get: { errorMessage != nil }, set: { if !$0 { errorMessage = nil } }
         )) { Button(L10n.text("action.ok"), role: .cancel) {} } message: { Text(errorMessage ?? "") }
+        .confirmationDialog(L10n.text("ntfs.remountTitle"), isPresented: $showingRemountConfirmation, titleVisibility: .visible) {
+            Button(L10n.text("ntfs.enableWrite")) { remountNTFS() }
+            Button(L10n.text("action.cancel"), role: .cancel) {}
+        } message: {
+            Text(L10n.text("ntfs.remountWarning"))
+        }
     }
 
     private func loadItems() {
@@ -90,6 +100,29 @@ struct VolumeBrowser: View {
             $0.name.localizedCaseInsensitiveContains(searchText)
         }
         return sortOrder.sorted(filtered)
+    }
+
+    private func remountNTFS() {
+        guard let providerPath = NTFSProviderStatus.detect().executablePath else { return }
+        let volumeURL = volume.url
+        isRemounting = true
+        Task {
+            let result: Result<Void, String> = await Task.detached(priority: .userInitiated) {
+                do {
+                    try NTFSRemounter.remount(volumeURL: volumeURL, providerPath: providerPath)
+                    return .success(())
+                } catch {
+                    return .failure(error.localizedDescription)
+                }
+            }.value
+            isRemounting = false
+            switch result {
+            case .success:
+                volumeStore.refresh()
+            case let .failure(message):
+                errorMessage = message
+            }
+        }
     }
 }
 

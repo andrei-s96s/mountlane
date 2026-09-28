@@ -31,6 +31,14 @@ final class VolumeInfoTests: XCTestCase {
         XCTAssertFalse(makeVolume(isReadOnly: true, total: nil, available: nil, fileSystem: "exFAT").isNTFS)
     }
 
+    func testNTFSRemountPlanOnlyAcceptsDiskIdentifiers() throws {
+        let plan = try NTFSRemountPlan.make(deviceIdentifier: "disk4s2", providerPath: "/opt/homebrew/bin/ntfs-3g")
+
+        XCTAssertEqual(plan.mountPoint, "/Volumes/Mountlane-disk4s2")
+        XCTAssertTrue(plan.shellCommand.contains("/dev/disk4s2"))
+        XCTAssertThrowsError(try NTFSRemountPlan.make(deviceIdentifier: "disk4; rm -rf /", providerPath: "/tmp/driver"))
+    }
+
     private func makeVolume(isReadOnly: Bool, total: Int64?, available: Int64?, fileSystem: String = "exFAT") -> VolumeInfo {
         VolumeInfo(
             id: "test-volume",

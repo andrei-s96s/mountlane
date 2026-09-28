@@ -24,8 +24,12 @@ enum NTFSProviderStatus: Equatable {
     case detected(path: String)
 
     var isDetected: Bool {
-        if case .detected = self { return true }
-        return false
+        executablePath != nil
+    }
+
+    var executablePath: String? {
+        if case let .detected(path) = self { return path }
+        return nil
     }
 
     static func detect(fileManager: FileManager = .default) -> NTFSProviderStatus {

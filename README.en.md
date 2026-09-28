@@ -29,7 +29,7 @@ To create a release artifact, push a semantic version tag such as `v0.1.0`. The 
 
 1. **Foundation (current):** native volume discovery and a read-only-safe browser.
 2. **Transfers:** queued copying, collision handling, verification, progress and operation log.
-3. **Drivers:** Mountlane already recognizes NTFS volumes and an installed NTFS-3G provider. The next step is managed remounting through a tested FUSE-T/NTFS-3G provider after real-device tests; ext4 will use the same modular approach.
+3. **Drivers:** Mountlane recognizes NTFS volumes and an installed NTFS-3G provider, and offers controlled remounting through FUSE-T/NTFS-3G for a read-only volume. The command runs only after user confirmation and macOS system authorization. ext4 will use the same modular approach.
 4. **Support:** an optional donation destination configured by the project owner; no donation SDK or tracking is included before that choice.
 
 ## Safety principles

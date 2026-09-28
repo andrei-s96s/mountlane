@@ -23,6 +23,11 @@
 "ntfs.providerMissing" = "macOS can read this NTFS volume. For reliable write access, install a compatible FUSE-T and NTFS-3G provider.";
 "ntfs.learnMore" = "FUSE-T installation options";
 "ntfs.safety" = "Before enabling write access, safely eject the disk from Windows and disable Windows Fast Startup or hibernation for that disk.";
+"ntfs.enableWrite" = "Enable write access";
+"ntfs.remountTitle" = "Enable NTFS write access?";
+"ntfs.remountWarning" = "Mountlane will unmount this volume, then ask macOS to mount it through NTFS-3G. macOS will request administrator authorization. If the disk was not cleanly disconnected from Windows, mounting can fail.";
+"ntfs.deviceNotFound" = "Mountlane could not identify the disk device for this NTFS volume.";
+"ntfs.remountFailed" = "NTFS-3G could not remount this volume. Check that FUSE-T and NTFS-3G are installed and that the disk is not in use.";
 "volume.available" = "%@ available of %@";
 "volume.capacityUnavailable" = "Capacity information unavailable";
 "action.openFinder" = "Open in Finder";
@@ -30,6 +35,7 @@
 "action.eject" = "Eject";
 "action.ok" = "OK";
 "action.done" = "Done";
+"action.cancel" = "Cancel";
 "eject.hint" = "Safely eject this volume";
 "error.title" = "Something went wrong";
 "settings.title" = "Settings";

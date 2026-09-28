@@ -23,6 +23,11 @@
 "ntfs.providerMissing" = "macOS может читать этот NTFS-том. Для надёжной записи установите совместимый провайдер FUSE-T и NTFS-3G.";
 "ntfs.learnMore" = "Варианты установки FUSE-T";
 "ntfs.safety" = "Перед включением записи безопасно извлеките диск в Windows и отключите для него Fast Startup или гибернацию Windows.";
+"ntfs.enableWrite" = "Включить запись";
+"ntfs.remountTitle" = "Включить запись на NTFS?";
+"ntfs.remountWarning" = "Mountlane отключит этот том, затем попросит macOS подключить его через NTFS-3G. macOS запросит права администратора. Если диск был отключён от Windows небезопасно, подключение может не выполниться.";
+"ntfs.deviceNotFound" = "Mountlane не удалось определить устройство для этого NTFS-тома.";
+"ntfs.remountFailed" = "NTFS-3G не удалось переподключить этот том. Проверьте, что установлены FUSE-T и NTFS-3G, а диск не используется.";
 "volume.available" = "%@ свободно из %@";
 "volume.capacityUnavailable" = "Сведения о ёмкости недоступны";
 "action.openFinder" = "Открыть в Finder";
@@ -30,6 +35,7 @@
 "action.eject" = "Извлечь";
 "action.ok" = "ОК";
 "action.done" = "Готово";
+"action.cancel" = "Отмена";
 "eject.hint" = "Безопасно извлечь этот том";
 "error.title" = "Что-то пошло не так";
 "settings.title" = "Настройки";

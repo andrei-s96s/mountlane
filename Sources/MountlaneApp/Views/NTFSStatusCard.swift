@@ -2,6 +2,8 @@ import SwiftUI
 
 struct NTFSStatusCard: View {
     let volume: VolumeInfo
+    let isRemounting: Bool
+    let remount: () -> Void
     private let provider = NTFSProviderStatus.detect()
 
     var body: some View {
@@ -19,6 +21,10 @@ struct NTFSStatusCard: View {
                 if provider.isDetected {
                     Text(volume.isReadOnly ? L10n.text("ntfs.providerDetectedReadOnly") : L10n.text("ntfs.providerDetectedWritable"))
                         .foregroundStyle(.secondary)
+                    if volume.isReadOnly {
+                        Button(L10n.text("ntfs.enableWrite"), systemImage: "arrow.triangle.2.circlepath") { remount() }
+                            .disabled(isRemounting)
+                    }
                 } else {
                     Text(L10n.text("ntfs.providerMissing"))
                         .foregroundStyle(.secondary)
