@@ -65,9 +65,7 @@ final class VolumeStore: ObservableObject {
     }
 
     func eject(_ volume: VolumeInfo) {
-        if !NSWorkspace.shared.unmountAndEjectDevice(at: volume.url) {
-            lastError = L10n.text("eject.failed")
-        }
+        NSWorkspace.shared.unmountAndEjectDevice(at: volume.url)
         refresh()
     }
 }
