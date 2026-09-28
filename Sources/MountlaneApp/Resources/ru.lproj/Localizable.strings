@@ -17,6 +17,12 @@
 "format.unknown" = "Неизвестный формат";
 "access.readOnly" = "Только чтение";
 "access.readWrite" = "Чтение и запись";
+"ntfs.title" = "Поддержка NTFS";
+"ntfs.providerDetectedReadOnly" = "Найден провайдер NTFS-3G, но этот том сейчас подключён только для чтения.";
+"ntfs.providerDetectedWritable" = "Этот NTFS-том подключён с доступом на запись.";
+"ntfs.providerMissing" = "macOS может читать этот NTFS-том. Для надёжной записи установите совместимый провайдер FUSE-T и NTFS-3G.";
+"ntfs.learnMore" = "Варианты установки FUSE-T";
+"ntfs.safety" = "Перед включением записи безопасно извлеките диск в Windows и отключите для него Fast Startup или гибернацию Windows.";
 "volume.available" = "%@ свободно из %@";
 "volume.capacityUnavailable" = "Сведения о ёмкости недоступны";
 "action.openFinder" = "Открыть в Finder";

@@ -26,12 +26,17 @@ final class VolumeInfoTests: XCTestCase {
         XCTAssertEqual(FileSortOrder.size.sorted([file, folder]).map(\.name), ["Folder", "File.txt"])
     }
 
-    private func makeVolume(isReadOnly: Bool, total: Int64?, available: Int64?) -> VolumeInfo {
+    func testNTFSDetectionUsesFormatDescription() {
+        XCTAssertTrue(makeVolume(isReadOnly: true, total: nil, available: nil, fileSystem: "Windows NTFS").isNTFS)
+        XCTAssertFalse(makeVolume(isReadOnly: true, total: nil, available: nil, fileSystem: "exFAT").isNTFS)
+    }
+
+    private func makeVolume(isReadOnly: Bool, total: Int64?, available: Int64?, fileSystem: String = "exFAT") -> VolumeInfo {
         VolumeInfo(
             id: "test-volume",
             url: URL(fileURLWithPath: "/Volumes/Test"),
             name: "Test",
-            fileSystem: "exFAT",
+            fileSystem: fileSystem,
             isReadOnly: isReadOnly,
             isRemovable: true,
             isEjectable: true,

@@ -19,6 +19,11 @@ struct VolumeBrowser: View {
     var body: some View {
         VStack(spacing: 0) {
             VolumeHeader(volume: volume)
+            if volume.isNTFS {
+                NTFSStatusCard(volume: volume)
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, 14)
+            }
             Divider()
             HStack(spacing: 10) {
                 Button(action: goUp) { Image(systemName: "chevron.left") }

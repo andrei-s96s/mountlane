@@ -12,9 +12,33 @@ struct VolumeInfo: Identifiable, Hashable {
     let availableCapacity: Int64?
 
     var accessModeKey: String { isReadOnly ? "access.readOnly" : "access.readWrite" }
+    var isNTFS: Bool { fileSystem.localizedCaseInsensitiveContains("ntfs") }
     var usedFraction: Double? {
         guard let totalCapacity, let availableCapacity, totalCapacity > 0 else { return nil }
         return 1 - (Double(availableCapacity) / Double(totalCapacity))
+    }
+}
+
+enum NTFSProviderStatus: Equatable {
+    case notInstalled
+    case detected(path: String)
+
+    var isDetected: Bool {
+        if case .detected = self { return true }
+        return false
+    }
+
+    static func detect(fileManager: FileManager = .default) -> NTFSProviderStatus {
+        let candidates = [
+            "/opt/homebrew/bin/ntfs-3g",
+            "/usr/local/bin/ntfs-3g",
+            "/opt/homebrew/sbin/mount.ntfs-3g",
+            "/usr/local/sbin/mount.ntfs-3g"
+        ]
+        if let path = candidates.first(where: fileManager.isExecutableFile(atPath:)) {
+            return .detected(path: path)
+        }
+        return .notInstalled
     }
 }
 
