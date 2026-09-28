@@ -23,6 +23,12 @@ jobs:
         run: |
           [[ "$RELEASE_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+([-.][0-9A-Za-z.-]+)?$ ]]
 
+      - name: Verify tag matches project version
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          test "$RELEASE_TAG" = "v$(tr -d '\n' < VERSION)"
+
       - name: Validate localizations and build
         run: |
           plutil -lint Sources/MountlaneApp/Resources/en.lproj/Localizable.strings
@@ -38,6 +44,7 @@ jobs:
           find .build/release -maxdepth 1 -type d -name '*.bundle' -exec cp -R {} dist/Mountlane/ \;
           cp README.md dist/Mountlane/
           cp README.en.md THIRD_PARTY_NOTICES.md LICENSE dist/Mountlane/
+          cp CHANGELOG.md VERSION dist/Mountlane/
           ditto -c -k --sequesterRsrc --keepParent dist/Mountlane "dist/Mountlane-${RELEASE_TAG}-macOS.zip"
 
       - name: Publish GitHub release
