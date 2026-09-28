@@ -2,55 +2,51 @@
 
 [Русский](README.md)
 
-Native macOS disk and file manager for working across file systems.
+**A free macOS file manager for disks.** Mountlane shows what is connected to your Mac, which file system it uses, and whether writing is safe.
 
-Mountlane starts with the file systems macOS supports natively (APFS, HFS+, FAT32 and exFAT) and makes each volume's actual access mode explicit. Support for NTFS, ext4 and other formats is deliberately separated into driver modules: a file manager cannot safely make a read-only file system writable by itself.
+## What it does
 
-## First milestone
+- Browse mounted APFS, HFS+, FAT32 and exFAT volumes.
+- Show format, free space and the real read-only/read-write mode.
+- Search and sort files, reveal hidden items, copy paths and open items in Finder.
+- Copy multiple files or folders between disks.
+- Check free space before copying.
+- Keep both, skip, or replace name collisions after confirmation.
+- Show transfer history and completion notifications.
+- Safely eject removable media.
+- Use English, Russian, or the macOS system language.
 
-- show mounted volumes and their file-system format;
-- make read-only/read-write state, capacity and diagnostics clear;
-- browse files and open the selected volume in Finder;
-- safely eject removable/ejectable volumes;
-- offer a Russian and English interface, with system-language detection;
-- reserve an optional Support item for a future donation link.
+## NTFS without false promises
 
-## Run in Xcode
+macOS normally mounts NTFS read-only. Mountlane makes that clear immediately.
 
-Open `Package.swift` in Xcode 16 or newer, select the **Mountlane** scheme, then run it. The current deployment target is macOS 15+, so it is compatible with Apple Silicon Macs running newer macOS releases.
+If FUSE-T and NTFS-3G are already installed, open the NTFS volume and choose **Enable write access**. Mountlane shows a warning first and macOS asks for administrator authorization. If the components are missing, **Prepare NTFS** checks the system and opens their official sources.
 
-## Continuous integration and releases
+Mountlane does not bundle, download, or install drivers. Before writing to an NTFS disk last used on Windows, safely eject it from Windows and disable Fast Startup/hibernation.
 
-GitHub Actions builds the release configuration, validates both localization files and runs the unit tests on macOS for every push to `main` and every pull request targeting it.
+## Other formats
 
-To create a release artifact, push a semantic version tag such as `v0.1.0`. The release workflow builds the app executable, packages it with its localization resources and the README, and creates a GitHub Release. This initial artifact is **not code-signed or notarized**; release distribution outside developer testing must add Apple Developer signing and notarization secrets first.
+Mountlane provides a safe diagnostic state for ext4 and never enables writing through an unverified driver. For simple file exchange between Mac and Windows, exFAT is usually the easiest choice.
 
+## Run it
 
-## Roadmap
+1. Install Xcode 16 or newer.
+2. Open `Package.swift` in Xcode.
+3. Select the **Mountlane** scheme and press Run.
 
-1. **Foundation (current):** native volume discovery and a read-only-safe browser.
-2. **Transfers:** queued copying, collision handling, verification, progress and operation log.
-3. **Drivers:** Mountlane recognizes NTFS volumes and an installed NTFS-3G provider, and offers controlled remounting through FUSE-T/NTFS-3G for a read-only volume. The command runs only after user confirmation and macOS system authorization. ext4 will use the same modular approach.
-4. **Support:** an optional donation destination configured by the project owner; no donation SDK or tracking is included before that choice.
+Minimum system version: macOS 15. The project is aimed at Apple Silicon.
 
-## Safety principles
+## Data safety
 
-- Never label a volume writable unless macOS reports it as writable.
-- Never ship a bundled third-party file-system driver without license, compatibility and real-device tests.
-- Always use macOS' normal unmount/eject path.
+- Copying never deletes source files.
+- Replacing an existing item needs separate confirmation.
+- A copy does not start when the destination lacks space.
+- Writing status comes from macOS, never a guess.
 
-## NTFS, FUSE-T, and NTFS-3G
+## Free project
 
-Mountlane does **not include, redistribute, modify, or compile** FUSE-T or NTFS-3G. It only checks for FUSE-T and a locally installed `ntfs-3g`, then invokes that user-installed driver to remount a specific NTFS volume only after explicit user action.
+Mountlane is completely free: no ads, paid features, or trackers. Future support will be voluntary donations only, without feature unlocks.
 
-Users install these components from their official sources and accept their terms themselves. Mountlane is not affiliated with FUSE-T, NTFS-3G, or their authors, and does not claim endorsement.
+## License and external components
 
-FUSE-T publishes separate binary-distribution terms, including a commercial-license requirement for commercial use or bundling with commercial software. NTFS-3G is GPL-licensed. Mountlane does not plan to include either component in a `.dmg`, installer, or release archive; the Prepare NTFS button only checks the system and links to official sources. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
-
-## Mountlane license
-
-Mountlane source code is GPL-2.0-or-later. This applies to Mountlane code only and does not mean that FUSE-T or NTFS-3G are included in a release. The complete text is in [LICENSE](LICENSE).
-
-## Project support
-
-Mountlane remains completely free: no feature, including NTFS support, will be paid. A future voluntary donation link will not unlock features or add advertising or tracking. Third-party terms will be reviewed again before it is published.
+Mountlane code is GPL-2.0-or-later. External NTFS component terms and the project policy are in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
