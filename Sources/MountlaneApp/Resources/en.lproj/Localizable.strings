@@ -16,6 +16,9 @@
 "files.sortSize" = "Size";
 "files.showHidden" = "Show hidden files";
 "format.unknown" = "Unknown format";
+"externalFormat.title" = "%@ support";
+"externalFormat.message" = "macOS does not provide native read/write support for this format. Mountlane will not enable writing without a verified external provider.";
+"externalFormat.safety" = "Use a tested compatible driver and keep a backup before modifying this volume.";
 "access.readOnly" = "Read-only";
 "access.readWrite" = "Read & write";
 "ntfs.title" = "NTFS support";

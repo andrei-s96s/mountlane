@@ -13,6 +13,7 @@ struct VolumeInfo: Identifiable, Hashable {
 
     var accessModeKey: String { isReadOnly ? "access.readOnly" : "access.readWrite" }
     var isNTFS: Bool { fileSystem.localizedCaseInsensitiveContains("ntfs") }
+    var isExt4: Bool { fileSystem.localizedCaseInsensitiveContains("ext4") }
     var usedFraction: Double? {
         guard let totalCapacity, let availableCapacity, totalCapacity > 0 else { return nil }
         return 1 - (Double(availableCapacity) / Double(totalCapacity))

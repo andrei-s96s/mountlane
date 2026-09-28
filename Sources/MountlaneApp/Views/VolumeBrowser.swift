@@ -42,6 +42,11 @@ struct VolumeBrowser: View {
                     .padding(.horizontal, 20)
                     .padding(.bottom, 14)
             }
+            if volume.isExt4 {
+                ExternalFormatCard(format: "ext4")
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, 14)
+            }
             Divider()
             HStack(spacing: 10) {
                 Button(action: goUp) { Image(systemName: "chevron.left") }
