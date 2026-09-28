@@ -17,6 +17,12 @@ Mountlane starts with the file systems macOS supports natively (APFS, HFS+, FAT3
 
 Open `Package.swift` in Xcode 16 or newer, select the **Mountlane** scheme, then run it. The current deployment target is macOS 15+, so it is compatible with Apple Silicon Macs running newer macOS releases.
 
+## Continuous integration and releases
+
+GitHub Actions builds the release configuration, validates both localization files and runs the unit tests on macOS for every push to `main` and every pull request targeting it.
+
+To create a release artifact, push a semantic version tag such as `v0.1.0`. The release workflow builds the app executable, packages it with the README and creates a GitHub Release. This initial artifact is **not code-signed or notarized**; release distribution outside developer testing must add Apple Developer signing and notarization secrets first.
+
 ## Roadmap
 
 1. **Foundation (current):** native volume discovery and a read-only-safe browser.

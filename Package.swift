@@ -11,6 +11,10 @@ let package = Package(
         .executableTarget(
             name: "Mountlane",
             resources: [.process("Resources")]
+        ),
+        .testTarget(
+            name: "MountlaneTests",
+            dependencies: ["Mountlane"]
         )
     ]
 )
