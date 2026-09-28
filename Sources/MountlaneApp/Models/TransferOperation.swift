@@ -51,3 +51,12 @@ struct TransferOperation: Identifiable, Equatable {
         startedAt = Date()
     }
 }
+
+struct TransferHistoryEntry: Identifiable, Codable {
+    let id: UUID
+    let itemCount: Int
+    let destinationName: String
+    let totalBytes: Int64
+    let succeeded: Bool
+    let completedAt: Date
+}

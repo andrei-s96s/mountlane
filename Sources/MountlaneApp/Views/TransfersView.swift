@@ -12,6 +12,20 @@ struct TransfersView: View {
                 Button(L10n.text("transfer.clear")) { transferStore.clearFinished() }
                     .disabled(transferStore.operations.isEmpty)
             }
+            if !transferStore.history.isEmpty {
+                Text(L10n.text("transfer.history")).font(.headline)
+                List(transferStore.history) { entry in
+                    HStack {
+                        Image(systemName: entry.succeeded ? "checkmark.circle.fill" : "xmark.circle.fill")
+                            .foregroundStyle(entry.succeeded ? Color.green : Color.red)
+                        Text(L10n.text("transfer.summary", Int64(entry.itemCount), entry.destinationName))
+                        Spacer()
+                        Text(entry.completedAt, format: .dateTime.month().day().hour().minute())
+                            .font(.caption).foregroundStyle(.secondary)
+                    }
+                }
+                Button(L10n.text("transfer.clearHistory")) { transferStore.clearHistory() }
+            }
             if transferStore.operations.isEmpty {
                 ContentUnavailableView(L10n.text("transfer.empty"), systemImage: "arrow.left.arrow.right", description: Text(L10n.text("transfer.emptyMessage")))
             } else {

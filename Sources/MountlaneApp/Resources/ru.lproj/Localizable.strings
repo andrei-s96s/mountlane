@@ -56,6 +56,11 @@
 "transfer.completed" = "Готово";
 "transfer.failed" = "Ошибка";
 "transfer.insufficientSpace" = "На томе назначения недостаточно свободного места для копирования.";
+"transfer.history" = "Журнал";
+"transfer.clearHistory" = "Очистить журнал";
+"transfer.notificationDone" = "Копирование завершено";
+"transfer.notificationFailed" = "Ошибка копирования";
+"transfer.notificationBody" = "Mountlane обработал объектов: %lld.";
 "transfer.conflict" = "Конфликты имён";
 "transfer.conflictKeepBoth" = "Сохранить оба";
 "transfer.conflictSkip" = "Пропускать существующие";

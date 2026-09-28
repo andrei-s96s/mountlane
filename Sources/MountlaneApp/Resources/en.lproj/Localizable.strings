@@ -56,6 +56,11 @@
 "transfer.completed" = "Completed";
 "transfer.failed" = "Failed";
 "transfer.insufficientSpace" = "The destination volume does not have enough free space for this copy.";
+"transfer.history" = "History";
+"transfer.clearHistory" = "Clear history";
+"transfer.notificationDone" = "Copy completed";
+"transfer.notificationFailed" = "Copy failed";
+"transfer.notificationBody" = "%lld item(s) processed by Mountlane.";
 "transfer.conflict" = "Name conflicts";
 "transfer.conflictKeepBoth" = "Keep both";
 "transfer.conflictSkip" = "Skip existing";

@@ -1,4 +1,5 @@
 import Foundation
+import UserNotifications
 
 private enum CopyResult: Sendable {
     case completed
@@ -8,6 +9,11 @@ private enum CopyResult: Sendable {
 @MainActor
 final class TransferStore: ObservableObject {
     @Published private(set) var operations: [TransferOperation] = []
+    @Published private(set) var history: [TransferHistoryEntry]
+
+    init() {
+        history = Self.loadHistory()
+    }
 
     func copy(_ sourceURLs: [URL], to destinationURL: URL, collisionPolicy: CollisionPolicy) throws {
         guard !sourceURLs.isEmpty else { return }
@@ -29,8 +35,12 @@ final class TransferStore: ObservableObject {
                 }
             }.value
             switch result {
-            case .completed: update(operationID, state: .completed)
-            case let .failed(message): update(operationID, state: .failed(message))
+            case .completed:
+                update(operationID, state: .completed)
+                finish(operation, succeeded: true)
+            case let .failed(message):
+                update(operationID, state: .failed(message))
+                finish(operation, succeeded: false)
             }
         }
     }
@@ -43,9 +53,44 @@ final class TransferStore: ObservableObject {
         }
     }
 
+    func clearHistory() {
+        history = []
+        saveHistory()
+    }
+
     private func update(_ id: UUID, state: TransferState) {
         guard let index = operations.firstIndex(where: { $0.id == id }) else { return }
         operations[index].state = state
+    }
+
+    private func finish(_ operation: TransferOperation, succeeded: Bool) {
+        history.insert(TransferHistoryEntry(id: operation.id, itemCount: operation.sourceURLs.count, destinationName: operation.destinationURL.lastPathComponent, totalBytes: operation.totalBytes, succeeded: succeeded, completedAt: Date()), at: 0)
+        history = Array(history.prefix(100))
+        saveHistory()
+        TransferNotifier.post(itemCount: operation.sourceURLs.count, succeeded: succeeded)
+    }
+
+    private func saveHistory() {
+        UserDefaults.standard.set(try? JSONEncoder().encode(history), forKey: "transferHistory")
+    }
+
+    private static func loadHistory() -> [TransferHistoryEntry] {
+        guard let data = UserDefaults.standard.data(forKey: "transferHistory") else { return [] }
+        return (try? JSONDecoder().decode([TransferHistoryEntry].self, from: data)) ?? []
+    }
+}
+
+enum TransferNotifier {
+    static func post(itemCount: Int, succeeded: Bool) {
+        let center = UNUserNotificationCenter.current()
+        center.requestAuthorization(options: [.alert, .sound]) { granted, _ in
+            guard granted else { return }
+            let content = UNMutableNotificationContent()
+            content.title = L10n.text(succeeded ? "transfer.notificationDone" : "transfer.notificationFailed")
+            content.body = L10n.text("transfer.notificationBody", Int64(itemCount))
+            let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil)
+            center.add(request)
+        }
     }
 }
 
